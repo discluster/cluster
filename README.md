@@ -8,7 +8,7 @@ When a CONTROL server recieves instructions from MASTER to start spawning cluste
 
 ### Initialisation
 
-When the cluster is spawned, it will immediately spawn shards but not connect them to the gateway until instructed to by CONTROL. After instructed to, the cluster will connect shards at a rate of [1 per 5 seconds](https://discord.com/developers/docs/topics/gateway#identifying), unless [maximum concurrency](https://discord.com/developers/docs/topics/gateway#sharding-for-very-large-bots) is used in which case it will connect all at once.
+When the cluster is spawned, it will immediately spawn shards and connect them to the Discord gateway. CONTROL only spawns clusters when they are ready to connect to Discord. The cluster will connect shards at a rate of [1 per 5 seconds](https://discord.com/developers/docs/topics/gateway#identifying), unless [maximum concurrency](https://discord.com/developers/docs/topics/gateway#sharding-for-very-large-bots) is used in which case it will connect all shards at once.
 
 After connecting all shards, the cluster will send an event back to CONTROL to signal that it is ready and recieving events.
 
@@ -16,6 +16,6 @@ After connecting all shards, the cluster will send an event back to CONTROL to s
 
 Cluster processes have two key roles: shard management and event handling.
 
-The former involves making sure all shards are connected to the gateway. If a shard disconnects, it must be resumed (but this is usually handled by the websocket itself). Some disconnect codes may be classed as 'fatal', a.k.a unrecoverable errors without user intervention. If this is the case, an event will be sent back to CONTROL for further processing. Refer to the CONTROL repository for more information.
+The former involves making sure all shards are connected to the gateway. If a shard disconnects, it must be resumed (but this is usually handled by the shard itself). Some disconnect codes may be classed as 'fatal', a.k.a unrecoverable errors without user intervention. If this is the case, an event will be sent back to CONTROL for further processing. Refer to the CONTROL repository for more information.
 
 The other key role is event handling. This involves receiving [dispatch packets](https://discord.com/developers/docs/topics/gateway#commands-and-events) from the Discord gateway and emitting them from the cluster itself, where the packet data can be used however the end user sees fit. By default, the cluster will take no further action on dispatch packets.
